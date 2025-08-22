@@ -1,6 +1,6 @@
 import { useRef } from "react";
 // Eğer react-dnd kullanıyorsanız, bunu yerine @dnd-kit/sortable kullanabilirsiniz.
-import { useDrag, useDrop } from "@dnd-kit/sortable"; // @dnd-kit/sortable'dan import ediyoruz
+// import { useDrag, useDrop } from "@dnd-kit/sortable"; // @dnd-kit/sortable'dan import ediyoruz
 import { DndContext } from "@dnd-kit/core"; // @dnd-kit/core'dan DndContext import ediyoruz
 import { Checkbox } from "antd";
 
@@ -16,9 +16,9 @@ interface DraggableCheckboxProps {
 }
 
 const DraggableCheckbox: React.FC<DraggableCheckboxProps> = ({
-    id,
-    index,
-    moveCheckbox,
+    // id,
+    // index,
+    // moveCheckbox,
     label,
     value,
     checkedList,
@@ -26,48 +26,48 @@ const DraggableCheckbox: React.FC<DraggableCheckboxProps> = ({
 }) => {
     const ref = useRef<HTMLDivElement | null>(null);
 
-    const [, drop] = useDrop({
-        accept: "checkbox",
-        hover(item: { index: number }, monitor) {
-            if (!ref.current) {
-                return;
-            }
-            const dragIndex = item.index;
-            const hoverIndex = index;
+    // const [, drop] = useDrop({
+    //     accept: "checkbox",
+    //     hover(item: { index: number }, monitor) {
+    //         if (!ref.current) {
+    //             return;
+    //         }
+    //         const dragIndex = item.index;
+    //         const hoverIndex = index;
 
-            if (dragIndex === hoverIndex) {
-                return;
-            }
+    //         if (dragIndex === hoverIndex) {
+    //             return;
+    //         }
 
-            const hoverBoundingRect = ref.current?.getBoundingClientRect();
-            const hoverMiddleY = (hoverBoundingRect!.bottom - hoverBoundingRect!.top) / 2;
-            const clientOffset = monitor.getClientOffset();
-            const hoverClientY = clientOffset!.y - hoverBoundingRect!.top;
+    //         const hoverBoundingRect = ref.current?.getBoundingClientRect();
+    //         const hoverMiddleY = (hoverBoundingRect!.bottom - hoverBoundingRect!.top) / 2;
+    //         const clientOffset = monitor.getClientOffset();
+    //         const hoverClientY = clientOffset!.y - hoverBoundingRect!.top;
 
-            if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-                return;
-            }
-            if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-                return;
-            }
+    //         if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+    //             return;
+    //         }
+    //         if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+    //             return;
+    //         }
 
-            moveCheckbox(dragIndex, hoverIndex);
-            item.index = hoverIndex;
-        },
-    });
+    //         moveCheckbox(dragIndex, hoverIndex);
+    //         item.index = hoverIndex;
+    //     },
+    // });
 
-    const [{ isDragging }, drag] = useDrag({
-        type: "checkbox",
-        item: { id, index },
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-        }),
-    });
+    // const [{ isDragging }, drag] = useDrag({
+    //     type: "checkbox",
+    //     item: { id, index },
+    //     collect: (monitor) => ({
+    //         isDragging: monitor.isDragging(),
+    //     }),
+    // });
 
-    drag(drop(ref));
+    // drag(drop(ref));
 
     return (
-        <div ref={ref} style={{ opacity: isDragging ? 0 : 1 }}>
+        <div ref={ref} >
             <Checkbox
                 checked={checkedList.includes(value)}
                 onChange={(e) => {
