@@ -8,6 +8,7 @@ dayjs.locale('tr')
 
 const DateInput = ({ name, checked, readonly, required }) => {
     const { control } = useFormContext()
+
     return (
         <Controller
             name={name}
@@ -15,10 +16,19 @@ const DateInput = ({ name, checked, readonly, required }) => {
             rules={{ required: required ? "Bu alan boş bırakılamaz!" : false }}
             render={({ field, fieldState }) => (
                 <>
+                    {/* ConfigProvider ile `tr_TR`'yi kullanarak yerelleştirme yapıyoruz */}
                     <ConfigProvider locale={tr_TR}>
-                        <DatePicker {...field} placeholder="" className={fieldState.error ? 'input-error' : ''} disabled={checked} readOnly={readonly} locale={dayjs.locale("tr")} format="DD.MM.YYYY" onChange={e => {
-                            field.onChange(e)
-                        }} />
+                        <DatePicker
+                            {...field}
+                            placeholder=""
+                            className={fieldState.error ? 'input-error' : ''}
+                            disabled={checked}
+                            readOnly={readonly}
+                            format="DD.MM.YYYY"
+                            onChange={e => {
+                                field.onChange(e)
+                            }}
+                        />
                     </ConfigProvider>
                     {fieldState.error && <span style={{ color: 'red' }}>{fieldState.error.message}</span>}
                 </>

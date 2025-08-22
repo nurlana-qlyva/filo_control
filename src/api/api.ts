@@ -12,7 +12,6 @@ export const GetListService = async (endpoint, options = {}) => {
       "Content-Type": "application/json",
       Accept: "application/json",
       Prefer: "count=exact", // ask for total row count
-      ...options.headers,
     },
   });
 
@@ -44,15 +43,6 @@ export const CreateCarInfoService = async (body) => {
 export const UploadImageService = async (file, urlName, id) => {
   const fileName = `${Date.now()}-${file.name}`;
   const filePath = `${id}/${fileName}`;
-
-  const { data, error } = await supabase.storage
-    .from(urlName)
-    .upload(filePath, file);
-
-  if (error) {
-    console.error("Yükleme hatası:", error);
-    return null;
-  }
 
   const { data: publicUrlData } = supabase.storage
     .from(urlName)

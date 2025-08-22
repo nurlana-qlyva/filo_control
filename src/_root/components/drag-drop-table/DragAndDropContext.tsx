@@ -14,17 +14,24 @@ import {
     SortableContext,
 } from '@dnd-kit/sortable';
 
-const DragIndexContext = createContext({
-    active: -1,
-    over: -1,
+// `dragIndex`'i genişletiyoruz ve direction'ı ekliyoruz.
+type DragIndexState = {
+    active: string | null; // string yerine number da olabilir, ihtiyaçlarınıza göre tip değiştirilebilir
+    over: string | null;
+    direction?: 'left' | 'right'; // direction'ı isteğe bağlı olarak ekliyoruz
+};
+
+const DragIndexContext = createContext<DragIndexState>({
+    active: null,
+    over: null,
 });
 
 export const useDragIndex = () => useContext(DragIndexContext);
 
 const DragAndDropContext = ({ children, items, setItems }) => {
-    const [dragIndex, setDragIndex] = useState({
-        active: -1,
-        over: -1,
+    const [dragIndex, setDragIndex] = useState<DragIndexState>({
+        active: null,
+        over: null,
     });
 
     const sensors = useSensors(
@@ -36,23 +43,25 @@ const DragAndDropContext = ({ children, items, setItems }) => {
     );
 
     const onDragEnd = ({ active, over }) => {
-        console.log(1)
+        console.log(1);
         if (active.id !== over?.id) {
             setItems((prevState) => {
-                const activeIndex = prevState.findIndex((i) => i.key === active?.id);
-                const overIndex = prevState.findIndex((i) => i.key === over?.id);
+                const activeIndex = prevState.findIndex((i) => i.key === active.id);
+                const overIndex = prevState.findIndex((i) => i.key === over.id);
                 return arrayMove(prevState, activeIndex, overIndex);
             });
         }
         setDragIndex({
-            active: -1,
-            over: -1,
+            active: null,
+            over: null,
         });
     };
 
     const onDragOver = ({ active, over }) => {
         const activeIndex = items.findIndex((i) => i.key === active.id);
         const overIndex = items.findIndex((i) => i.key === over?.id);
+
+        // `direction` bilgisini ekliyoruz.
         setDragIndex({
             active: active.id,
             over: over?.id,

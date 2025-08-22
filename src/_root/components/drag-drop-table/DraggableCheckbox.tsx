@@ -1,15 +1,34 @@
 import { useRef } from "react";
-import { useDrag, useDrop } from "react-dnd";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+// Eğer react-dnd kullanıyorsanız, bunu yerine @dnd-kit/sortable kullanabilirsiniz.
+import { useDrag, useDrop } from "@dnd-kit/sortable"; // @dnd-kit/sortable'dan import ediyoruz
+import { DndContext } from "@dnd-kit/core"; // @dnd-kit/core'dan DndContext import ediyoruz
 import { Checkbox } from "antd";
 
-const DraggableCheckbox = ({ id, index, moveCheckbox, label, value, checkedList, setCheckedList }) => {
-    const ref = useRef(null);
+// TypeScript'te PropTypes kullanmaya gerek yok. Props'ları tiplerle tanımlıyoruz.
+interface DraggableCheckboxProps {
+    id: string | number;
+    index: number;
+    moveCheckbox: (dragIndex: number, hoverIndex: number) => void;
+    label: string;
+    value: string | number;
+    checkedList: (string | number)[];
+    setCheckedList: React.Dispatch<React.SetStateAction<(string | number)[]>>;
+}
+
+const DraggableCheckbox: React.FC<DraggableCheckboxProps> = ({
+    id,
+    index,
+    moveCheckbox,
+    label,
+    value,
+    checkedList,
+    setCheckedList
+}) => {
+    const ref = useRef<HTMLDivElement | null>(null);
 
     const [, drop] = useDrop({
         accept: "checkbox",
-        hover(item, monitor) {
+        hover(item: { index: number }, monitor) {
             if (!ref.current) {
                 return;
             }
@@ -21,9 +40,9 @@ const DraggableCheckbox = ({ id, index, moveCheckbox, label, value, checkedList,
             }
 
             const hoverBoundingRect = ref.current?.getBoundingClientRect();
-            const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+            const hoverMiddleY = (hoverBoundingRect!.bottom - hoverBoundingRect!.top) / 2;
             const clientOffset = monitor.getClientOffset();
-            const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+            const hoverClientY = clientOffset!.y - hoverBoundingRect!.top;
 
             if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
                 return;
@@ -65,18 +84,18 @@ const DraggableCheckbox = ({ id, index, moveCheckbox, label, value, checkedList,
     );
 };
 
-DraggableCheckbox.propTypes = {
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    index: PropTypes.number,
-    moveCheckbox: PropTypes.func,
-    label: PropTypes.string,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    checkedList: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
-    setCheckedList: PropTypes.func,
-};
-
-const Content = ({ options, checkedList, setCheckedList, moveCheckbox }) => (
-    <DndProvider backend={HTML5Backend}>
+const Content = ({
+    options,
+    checkedList,
+    setCheckedList,
+    moveCheckbox
+}: {
+    options: { value: string | number; label: string }[];
+    checkedList: (string | number)[];
+    setCheckedList: React.Dispatch<React.SetStateAction<(string | number)[]>>;
+    moveCheckbox: (dragIndex: number, hoverIndex: number) => void;
+}) => (
+    <DndContext>
         {options.map((option, index) => (
             <DraggableCheckbox
                 key={option.value}
@@ -89,7 +108,7 @@ const Content = ({ options, checkedList, setCheckedList, moveCheckbox }) => (
                 setCheckedList={setCheckedList}
             />
         ))}
-    </DndProvider>
+    </DndContext>
 );
 
-export default Content
+export default Content;

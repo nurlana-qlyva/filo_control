@@ -22,6 +22,7 @@ const Vehicles = () => {
         pagination: {
             current: 1,
             pageSize: 10,
+            total: 0
         },
     });
     const [loading, setLoading] = useState(false);
@@ -31,8 +32,6 @@ const Vehicles = () => {
     const [openRowHeader, setOpenRowHeader] = useState(false);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [keys, setKeys] = useState([]);
-    const [rows, setRows] = useState([]);
-    const [filterData, setFilterData] = useState({});
 
 
     const getBaseColumns = () => [
@@ -144,7 +143,6 @@ const Vehicles = () => {
         tableParams.pagination.current,
         tableParams.pagination.pageSize,
         status,
-        filterData,
     ]);
 
 
@@ -162,16 +160,16 @@ const Vehicles = () => {
         }
     };
 
-    const filter = (data) => {
-        setLoading(true);
-        setStatus(true);
-        setFilterData(data);
-    };
+    // const filter = (data) => {
+    //     setLoading(true);
+    //     setStatus(true);
+    //     setFilterData(data);
+    // };
 
-    const clear = () => {
-        setLoading(true);
-        setFilterData({});
-    };
+    // const clear = () => {
+    //     setLoading(true);
+    //     setFilterData({});
+    // };
 
     const newColumns = columns.map((col) => ({
         ...col,
@@ -208,13 +206,10 @@ const Vehicles = () => {
         if (selected) {
             if (!keys.includes(row.aracId)) {
                 setKeys((prevKeys) => [...prevKeys, row.aracId]);
-                setRows((prevRows) => [...prevRows, row]);
             }
         } else {
             setKeys((prevKeys) => prevKeys.filter((key) => key !== row.aracId));
-            setRows((prevRows) =>
-                prevRows.filter((item) => item.aracId !== row.aracId)
-            );
+           
         }
     };
 
@@ -223,15 +218,6 @@ const Vehicles = () => {
         [keys]
     );
 
-    useEffect(() => {
-        const newPlakaEntries = rows.map((vehicle) => ({
-            id: vehicle.aracId,
-            plaka: vehicle.plaka,
-            lokasyonId: vehicle.lokasyonId,
-            lokasyon: vehicle.lokasyon,
-        }));
-        // setPlaka(newPlakaEntries);
-    }, [rows]);
 
     useEffect(() => {
         const storedSelectedKeys = JSON.parse(

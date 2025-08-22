@@ -6,17 +6,59 @@ import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import GeneralInfo from "./GeneralInfo";
 import { CreateCarInfoService, GetListService } from "../../../../../api/api";
 
-const AddModal = ({ setStatus }) => {
+// TypeScript arayüzü: Form değerleri için
+interface CarInfoFormValues {
+    license_plate: string;
+    vehicle_type: string;
+    miliage: number;
+    location: string;
+    brand: string;
+    model: string;
+    year: number;
+    driver: string;
+    fuel_type: string;
+    contract_date: string;
+    color: string;
+    emission_test_date: string;
+    inspection_date: string;
+    tax_date: string;
+}
+
+interface AddModalProps {
+    setStatus: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const AddModal = ({ setStatus }: AddModalProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isValid, setIsValid] = useState("normal");
     const [loading, setLoading] = useState(false);
 
-    const defaultValues = {};
-    const methods = useForm({
+    // Default form değerleri (ilk başta boş)
+    const defaultValues: CarInfoFormValues = {
+        license_plate: "",
+        vehicle_type: "",
+        miliage: 0,
+        location: "",
+        brand: "",
+        model: "",
+        year: 0,
+        driver: "",
+        fuel_type: "",
+        contract_date: "",
+        color: "",
+        emission_test_date: "",
+        inspection_date: "",
+        tax_date: "",
+    };
+
+    // react-hook-form kullanımı
+    const methods = useForm<CarInfoFormValues>({
         defaultValues: defaultValues,
     });
     const { handleSubmit, reset, watch } = methods;
-    const handleOk = handleSubmit(async (value) => {
+
+    // Form onSubmit handler
+    const handleOk = async (value: CarInfoFormValues) => {
         const body = {
             license_plate: value.license_plate,
             vehicle_type: value.vehicle_type,
@@ -42,7 +84,7 @@ const AddModal = ({ setStatus }) => {
                 setIsModalOpen(false);
                 reset(defaultValues);
                 setIsValid("normal");
-                setStatus(prev => !prev);
+                setStatus((prev) => !prev);
             } else {
                 console.error("Insert failed");
             }
@@ -51,8 +93,7 @@ const AddModal = ({ setStatus }) => {
         } finally {
             setLoading(false);
         }
-    });
-
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -69,35 +110,30 @@ const AddModal = ({ setStatus }) => {
                 if (watch("license_plate").length > 0) {
                     const { data } = await GetListService(url);
                     if (data.length > 0) {
-                        setIsValid("error")
+                        setIsValid("error");
                     } else {
-                        setIsValid("success")
+                        setIsValid("success");
                     }
-                } else if (watch("license_plate").length === 0) setIsValid("normal")
-
-
-
+                } else if (watch("license_plate").length === 0) setIsValid("normal");
             } catch (err) {
                 console.error(err);
             }
         };
 
         fetchData();
-    }, [watch("license_plate")])
+    }, [watch("license_plate")]);
 
     const footer = [
         loading ? (
-            <Button className="btn btn-min primary-btn">
+            <Button key="loading" className="btn btn-min primary-btn" disabled>
                 <LoadingOutlined />
             </Button>
         ) : (
             <Button
                 key="submit"
                 className="btn btn-min primary-btn"
-                onClick={handleOk}
-                disabled={
-                    isValid === "error" || isValid === "normal" ? true : isValid === "success" ? false : false
-                }
+                onClick={handleSubmit(handleOk)}
+                disabled={isValid === "error" || isValid === "normal"}
             >
                 {t("kaydet")}
             </Button>
@@ -128,7 +164,6 @@ const AddModal = ({ setStatus }) => {
             <Modal
                 title={t("yeniAracGiris")}
                 open={isModalOpen}
-                onOk={handleOk}
                 onCancel={() => {
                     setIsModalOpen(false);
                     reset(defaultValues);

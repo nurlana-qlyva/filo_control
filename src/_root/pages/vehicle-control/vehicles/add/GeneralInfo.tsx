@@ -1,9 +1,9 @@
 import { t } from 'i18next'
-import TextInput from '../../../../components/form/TextInput';
+// import TextInput from '../../../../components/form/TextInput';
 import SelectboxInput from '../../../../components/form/SelectboxInput';
-import NumberInput from '../../../../components/form/NumberInput';
-import LicensePlateInput from '../../../../components/form/LicensePlateInput';
-import DateInput from '../../../../components/form/DateInput';
+// import NumberInput from '../../../../components/form/NumberInput';
+// import LicensePlateInput from '../../../../components/form/LicensePlateInput';
+// import DateInput from '../../../../components/form/DateInput';
 
 const GeneralInfo = ({ isValid }) => {
     const validateStyle = {
@@ -11,6 +11,7 @@ const GeneralInfo = ({ isValid }) => {
             isValid === "success" ? "#23b545" :
                 "#000",
     };
+    console.log(validateStyle)
 
     return (
         <>
@@ -20,7 +21,7 @@ const GeneralInfo = ({ isValid }) => {
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
                                 <label>{t("plaka")} <span className="text-danger">*</span></label>
-                                <LicensePlateInput style={validateStyle} required={true} />
+                                {/* <LicensePlateInput style={validateStyle} required={true} /> */}
                             </div>
                         </div>
                         <div className="col-span-4">
@@ -32,7 +33,7 @@ const GeneralInfo = ({ isValid }) => {
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
                                 <label>{t("guncelKm")}</label>
-                                <NumberInput name="miliage" />
+                                {/* <NumberInput name="miliage" /> */}
                             </div>
                         </div>
                     </div>
@@ -64,19 +65,19 @@ const GeneralInfo = ({ isValid }) => {
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
                                 <label>{t("yil")}</label>
-                                <NumberInput name="year" />
+                                {/* <NumberInput name="year" /> */}
                             </div>
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
                                 <label>{t("renk")}</label>
-                                <SelectboxInput type="color" urlName="colors" />
+                                {/* <SelectboxInput type="color" urlName="colors" /> */}
                             </div>
                         </div>
                         <div className="col-span-4">
                             <div className="flex flex-col gap-1">
                                 <label>{t("surucu")} <span className="text-danger">*</span></label>
-                                <TextInput name="driver" required={true} />
+                                {/* <TextInput name="driver" required={true} /> */}
                             </div>
                         </div>
                         <div className="col-span-4">
@@ -94,25 +95,25 @@ const GeneralInfo = ({ isValid }) => {
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label className='text-info'>{t("muayeneTarihi")}</label>
-                                <DateInput name="inspection_date" />
+                                {/* <DateInput name="inspection_date" /> */}
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label className='text-info'>{t("sozlesmeTarihi")}</label>
-                                <DateInput name="contract_date" />
+                                {/* <DateInput name="contract_date" /> */}
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label className='text-info'>{t("egzozTarihi")}</label>
-                                <DateInput name="emission_test_date" />
+                                {/* <DateInput name="emission_test_date" /> */}
                             </div>
                         </div>
                         <div className="col-span-6">
                             <div className="flex flex-col gap-1">
                                 <label className='text-info'>{t("vergiTarihi")}</label>
-                                <DateInput name="tax_date" />
+                                {/* <DateInput name="tax_date" /> */}
                             </div>
                         </div>
                     </div>
